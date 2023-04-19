@@ -1,10 +1,12 @@
 <template>
     <DefaultLayout>
-        <p>Voice to ChatGPT</p>
+        <p>2023 - PRESENT @ HENDRI WILLIAM</p>
         <button @click="handleStart">Start</button>
         <button @click="handleStop">Stop</button>
         <p>Status: {{ status }}</p>
         <p>Result: {{ result }}</p>
+        <button @click="sendRequestCompletion(promptnya)">Send Prompt</button>
+        <p>{{ resultAI }}</p>
     </DefaultLayout>
 </template>
 
@@ -13,7 +15,20 @@ import DefaultLayout from "../components/layout/DefaultLayout.vue";
 import SR from "../utils/voice";
 import words from "../utils/grammar";
 import { ref } from "vue";
+import CompletionChatGPT from "../utils/openai";
+const newCompletion = new CompletionChatGPT();
 
+async function sendRequestCompletion(prompt: string): Promise<void> {
+    const response = await newCompletion.sendPrompt(prompt);
+    resultAI.value = response.choices[0].text;
+    console.log(response);
+    return;
+}
+
+const promptnya = ref<string>(
+    "Tolong sarankan saya 5 tempat di Indonesia dengan biaya hidup murah"
+);
+const resultAI = ref<string | any>("Idle");
 const status = ref<string>("Idle");
 const result = ref<string>("Idle");
 
@@ -42,13 +57,14 @@ recognition.onend = () => {
     status.value = "Stop listening";
 };
 
+//callback ketika recognition sudah menerima hasil.
 recognition.onresult = (event: SpeechRecognitionEvent) => {
     console.log(event.results);
     for (let i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
             result.value = event.results[i][0].transcript;
         } else {
-            result.value = event.results[i][0].transcript;
+            result.value += event.results[i][0].transcript;
         }
     }
 };

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import NavBar from "../UI/NavBar.vue";
+import Navbar from "../UI/Navbar.vue";
 </script>
 
 <style lang="scss" scoped>

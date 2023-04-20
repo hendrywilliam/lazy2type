@@ -1,4 +1,4 @@
-//kumpulan kata-kata agar penangkapan kata lebih presisi
+//kumpulan kata-kata agar penangkapan oleh SpeechRecognition kata lebih presisi
 const words: string[] = ["aku", "masih", "teka"];
 
 export default words;

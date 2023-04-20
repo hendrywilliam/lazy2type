@@ -1,5 +1,4 @@
 /**
- * !!THIS IS NOT MY CODE!!
  * for some reason, SpeechRecognition is not available in lib.dom.ts
  * ts also not recognize speechrecog type with @types/dom-speech-recognition
  * so i decided to put this in my own "types" folder.

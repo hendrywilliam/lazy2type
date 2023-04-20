@@ -1,12 +1,14 @@
 <template>
     <div class="layout">
-        <NavBar />
+        <Navbar />
         <slot></slot>
+        <Footer />
     </div>
 </template>
 
 <script setup lang="ts">
 import Navbar from "../UI/Navbar.vue";
+import Footer from "../UI/Footer.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -14,7 +16,5 @@ import Navbar from "../UI/Navbar.vue";
     box-sizing: border-box;
     padding: 10;
     width: 100%;
-    min-height: 100vh;
-    border: 5px solid red;
 }
 </style>

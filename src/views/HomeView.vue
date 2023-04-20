@@ -1,18 +1,33 @@
 <template>
     <DefaultLayout>
         <main class="main">
-            <p class="main__big-header">Beep boop beep boop🤖</p>
-            <button @click="handleStart">Start</button>
-            <button @click="handleStop">Stop</button>
-            <p>Status: {{ status }}</p>
-            <p>Result: {{ result }}</p>
-            <button @click="sendRequestCompletion(promptnya)">
-                Send Prompt
-            </button>
-            <button @click="sendChatCompletion(promptnya)">
-                SEND REQUEST CHAT
-            </button>
-            <p>{{ resultAI }}</p>
+            <div class="result-chat">
+                <div class="result-item">
+                    <div class="result-item__avatar">
+                        <img src="/robot.svg" alt="Robot Icon" />
+                    </div>
+                    <p class="result-item__content">{{ resultAI }}</p>
+                </div>
+            </div>
+            <div class="main__result-speech">
+                <div class="result-speech__content">
+                    <p>Result: {{ result }}</p>
+                </div>
+                <button
+                    class="result-speech__button"
+                    v-if="isMicActive"
+                    @click="handleStop"
+                >
+                    Stop
+                </button>
+                <button
+                    class="result-speech__button"
+                    v-else
+                    @click="handleStart"
+                >
+                    Listen
+                </button>
+            </div>
         </main>
     </DefaultLayout>
 </template>
@@ -22,16 +37,8 @@ import DefaultLayout from "../components/layout/DefaultLayout.vue";
 import SR from "../utils/voice";
 import words from "../utils/grammar";
 import { ref } from "vue";
-import { TextCompletionChatGPT, ChatCompletionChatGPT } from "../utils/openai";
-const newCompletion = new TextCompletionChatGPT();
+import { ChatCompletionChatGPT } from "../utils/openai";
 const chatCompletion = new ChatCompletionChatGPT();
-
-async function sendRequestCompletion(prompt: string): Promise<void> {
-    const response = await newCompletion.sendTextPrompt(prompt);
-    resultAI.value = response.choices[0].text;
-    console.log(response);
-    return;
-}
 
 async function sendChatCompletion(prompt: string): Promise<void> {
     const res = await chatCompletion.sendChatPrompt(prompt);
@@ -39,46 +46,33 @@ async function sendChatCompletion(prompt: string): Promise<void> {
     console.log(res);
 }
 
-// async function sendChatCompletion(prompt: string): Promise
-
-const promptnya = ref<string>(
-    "Tolong sarankan saya 3 tempat di Indonesia dengan biaya hidup murah, serta rata-rata biaya hidup"
+const resultAI = ref<string | any>(
+    "Beep boop beep boop. I'm on idle, say something!"
 );
-const resultAI = ref<string | any>("Idle");
 const status = ref<string>("Idle");
 const result = ref<string>("Idle");
+const isMicActive = ref<boolean>(false);
 
 /* eslint-disable */
 const recognition: SpeechRecognition = SR(words);
 
 function handleStart() {
+    isMicActive.value = !isMicActive.value;
     recognition.start();
 }
 
 function handleStop() {
+    isMicActive.value = !isMicActive.value;
     recognition.stop();
 }
-//callback ketika audio ditangkap oleh mic
-recognition.onaudiostart = () => {
-    console.log("Capturing voice");
-};
-//callback ketika tombol handle start ditekan / .start di fire
-recognition.onstart = () => {
-    status.value = "Start listening";
-};
-//callback ketika tombol stop ditekan/ .stop difire
-recognition.onend = (): void => {
-    status.value = "Stop listening";
-};
 
 //callback ketika recognition sudah menerima hasil.
 recognition.onresult = (event: SpeechRecognitionEvent) => {
-    console.log(event.results);
     for (let i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
             result.value = event.results[i][0].transcript;
         } else {
-            result.value += event.results[i][0].transcript;
+            result.value = event.results[i][0].transcript;
         }
     }
 };
@@ -86,9 +80,68 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
 
 <style scoped lang="scss">
 .main {
-    &__big-header {
-        font-size: 60px;
-        font-weight: bold;
+    height: calc(100vh - 120px);
+    width: 100vw;
+    display: flex;
+    padding: 30px;
+    align-items: center;
+    flex-direction: column;
+
+    .result-chat {
+        border-radius: 0.5rem;
+        margin-bottom: 10px;
+        display: flex;
+        gap: 10px;
+        width: 50%;
+        padding: 10px;
+        height: 90%;
+        overflow-y: auto;
+
+        .result-item {
+            display: flex;
+            height: max-content;
+            width: 100%;
+            gap: 10px;
+
+            &__avatar {
+                width: max-content;
+                img {
+                    width: 40px;
+                }
+            }
+
+            &__content {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+
+    &__result-speech {
+        width: 50%;
+        height: 60px;
+        border: 1px solid gray;
+        padding: 10px;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        .result-speech__content {
+            display: flex;
+            align-items: center;
+            width: 90%;
+        }
+
+        .result-speech__button {
+            color: #d3d3d3;
+            width: 10%;
+            background-color: transparent;
+            gap: 10px;
+            text-decoration: none;
+            border: 1px solid #d3d3d3;
+            padding: 5px;
+            border-radius: 0.5rem;
+        }
     }
 }
 </style>

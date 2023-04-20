@@ -17,7 +17,6 @@ export default function (grammarList?: string[]): SpeechRecognition | any {
                 "#JSGF V1.0; grammar words; public <word> = " +
                 grammarList.join(" | ") +
                 " ;";
-            console.log(grammar);
             speechRecognitionList.addFromString(grammar, 1);
             recognition.grammars = speechRecognitionList;
         }

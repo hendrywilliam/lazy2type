@@ -1,7 +1,15 @@
 <template>
     <div class="navbar">
-        <p>Lazy2Type</p>
-        <p>2023 - HENDRI WILLIAM</p>
+        <div class="navbar-container">
+            <p class="navbar__header">LAZY2TYPE</p>
+            <a
+                href="https://github.com/hendrywilliam/lazy2type"
+                class="navbar__github-link"
+            >
+                <img src="github.svg" alt="" />
+                Star on Github
+            </a>
+        </div>
     </div>
 </template>
 
@@ -9,7 +17,33 @@
 
 <style lang="scss" scoped>
 .navbar {
-    width: 100%;
-    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 70px;
+    .navbar-container {
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        .navbar__header {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .navbar__github-link {
+            color: #d3d3d3;
+            display: flex;
+            gap: 10px;
+            text-decoration: none;
+            border: 1px solid #d3d3d3;
+            padding: 5px;
+            border-radius: 0.5rem;
+        }
+    }
 }
 </style>

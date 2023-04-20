@@ -11,7 +11,7 @@
             </div>
             <div class="main__result-speech">
                 <div class="result-speech__content">
-                    <p>Result: {{ result }}</p>
+                    <p>Result: {{ resultSpeech }}</p>
                 </div>
                 <button
                     class="result-speech__button"
@@ -36,7 +36,7 @@
 import DefaultLayout from "../components/layout/DefaultLayout.vue";
 import SR from "../utils/voice";
 import words from "../utils/grammar";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { ChatCompletionChatGPT } from "../utils/openai";
 const chatCompletion = new ChatCompletionChatGPT();
 
@@ -49,8 +49,7 @@ async function sendChatCompletion(prompt: string): Promise<void> {
 const resultAI = ref<string | any>(
     "Beep boop beep boop. I'm on idle, say something!"
 );
-const status = ref<string>("Idle");
-const result = ref<string>("Idle");
+const resultSpeech = ref<string>("Idle");
 const isMicActive = ref<boolean>(false);
 
 /* eslint-disable */
@@ -64,18 +63,31 @@ function handleStart() {
 function handleStop() {
     isMicActive.value = !isMicActive.value;
     recognition.stop();
+    //mastiin bahwa semua proses berhenti
+    chatCompletion.cancelFetching();
+    voiceResultWatcher();
 }
 
 //callback ketika recognition sudah menerima hasil.
 recognition.onresult = (event: SpeechRecognitionEvent) => {
     for (let i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
-            result.value = event.results[i][0].transcript;
+            resultSpeech.value = event.results[i][0].transcript;
         } else {
-            result.value = event.results[i][0].transcript;
+            resultSpeech.value = event.results[i][0].transcript;
         }
     }
 };
+
+const voiceResultWatcher = watch(resultSpeech, (newRes, _, onCleanup) => {
+    const countdownBeforeParty = setTimeout(() => {
+        console.log(newRes);
+    }, 2000);
+
+    onCleanup(() => {
+        clearTimeout(countdownBeforeParty);
+    });
+});
 </script>
 
 <style scoped lang="scss">

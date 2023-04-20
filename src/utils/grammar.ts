@@ -21,6 +21,15 @@ const words: string[] = [
     "mamang",
     "alterra",
     "academy",
+    "freya",
+    "jekate48",
+    "meong",
+    "monyet",
+    "kambing",
+    "christiano",
+    "ronaldo",
+    "messi",
+    "mbappe",
 ];
 
 export default words;

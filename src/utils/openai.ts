@@ -1,3 +1,4 @@
+//next feature i guess?
 export class TextCompletionChatGPT {
     protected readonly _url: string = "https://api.openai.com/v1/completions";
     protected readonly _key: string = import.meta.env.VITE_API_KEY;

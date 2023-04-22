@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from "../UI/Navbar.vue";
 import Footer from "../UI/Footer.vue";
+import Navbar from "../UI/Navbar.vue";
 </script>
 
 <style lang="scss" scoped>

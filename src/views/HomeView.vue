@@ -4,7 +4,7 @@
             <div class="result-chat">
                 <div class="result-item">
                     <div class="result-item__avatar">
-                        <img src="/robot.svg" alt="Robot Icon" />
+                        <img src="../assets/img/robot.svg" alt="Robot Icon" />
                     </div>
                     <p class="result-item__content">{{ resultAI }}</p>
                 </div>

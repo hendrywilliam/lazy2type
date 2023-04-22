@@ -1,4 +1,5 @@
 # lazy2type
+https://lazy2type.netlify.app/
 
 https://lazy2type.netlify.app/
 

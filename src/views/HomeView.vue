@@ -80,9 +80,9 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
     }
 };
 
+//programmatically stop => voiceResultWatcher()
 const voiceResultWatcher = watch(resultSpeech, (newRes, _, onCleanup) => {
     const countdownBeforeParty = setTimeout(async () => {
-        console.log(newRes);
         await sendChatCompletion(resultSpeech.value);
     }, 2000);
 
@@ -101,60 +101,119 @@ const voiceResultWatcher = watch(resultSpeech, (newRes, _, onCleanup) => {
     align-items: center;
     flex-direction: column;
 
-    .result-chat {
-        border-radius: 0.5rem;
-        margin-bottom: 10px;
-        display: flex;
-        gap: 10px;
-        width: 50%;
-        padding: 10px;
-        height: 90%;
-        overflow-y: auto;
-
-        .result-item {
+    @media only screen and (max-width: 1023px) {
+        .result-chat {
+            margin-bottom: 10px;
             display: flex;
-            height: max-content;
-            width: 100%;
             gap: 10px;
+            width: 100%;
+            height: 90%;
+            overflow-y: auto;
 
-            &__avatar {
-                width: max-content;
-                img {
-                    width: 40px;
+            .result-item {
+                display: flex;
+                height: max-content;
+                width: 100%;
+                gap: 10px;
+
+                &__avatar {
+                    width: max-content;
+                    img {
+                        width: 40px;
+                    }
+                }
+
+                &__content {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
             }
+        }
 
-            &__content {
+        &__result-speech {
+            width: 100%;
+            height: 60px;
+            border: 1px solid gray;
+            padding: 10px;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            .result-speech__content {
                 display: flex;
-                justify-content: center;
                 align-items: center;
+                width: 80%;
+            }
+
+            .result-speech__button {
+                color: #d3d3d3;
+                width: 20%;
+                background-color: transparent;
+                gap: 10px;
+                text-decoration: none;
+                border: 1px solid #d3d3d3;
+                padding: 5px;
+                border-radius: 0.5rem;
             }
         }
     }
 
-    &__result-speech {
-        width: 50%;
-        height: 60px;
-        border: 1px solid gray;
-        padding: 10px;
-        border-radius: 0.5rem;
-        display: flex;
-        justify-content: space-between;
-        .result-speech__content {
+    @media only screen and (min-width: 1024px) {
+        .result-chat {
+            border-radius: 0.5rem;
+            margin-bottom: 10px;
             display: flex;
-            align-items: center;
-            width: 90%;
+            gap: 10px;
+            width: 50%;
+            padding: 10px;
+            height: 90%;
+            overflow-y: auto;
+
+            .result-item {
+                display: flex;
+                height: max-content;
+                width: 100%;
+                gap: 10px;
+
+                &__avatar {
+                    width: max-content;
+                    img {
+                        width: 40px;
+                    }
+                }
+
+                &__content {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
         }
 
-        .result-speech__button {
-            color: #d3d3d3;
-            width: 10%;
-            background-color: transparent;
-            gap: 10px;
-            text-decoration: none;
-            border: 1px solid #d3d3d3;
-            padding: 5px;
+        &__result-speech {
+            width: 50%;
+            height: 60px;
+            border: 1px solid gray;
+            padding: 10px;
             border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            .result-speech__content {
+                display: flex;
+                align-items: center;
+                width: 90%;
+            }
+
+            .result-speech__button {
+                color: #d3d3d3;
+                width: 10%;
+                background-color: transparent;
+                gap: 10px;
+                text-decoration: none;
+                border: 1px solid #d3d3d3;
+                padding: 5px;
+                border-radius: 0.5rem;
+            }
         }
     }
 }

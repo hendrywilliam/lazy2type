@@ -63,9 +63,10 @@ function handleStart() {
 function handleStop() {
     isMicActive.value = !isMicActive.value;
     recognition.stop();
-    //mastiin bahwa semua proses berhenti
-    chatCompletion.cancelFetching();
-    voiceResultWatcher();
+    // //mastiin bahwa semua proses berhenti
+    // chatCompletion.cancelFetching();
+    // //secara programatis memberhentikan voiceResultWatcher watch
+    // voiceResultWatcher();
 }
 
 //callback ketika recognition sudah menerima hasil.
@@ -80,8 +81,9 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
 };
 
 const voiceResultWatcher = watch(resultSpeech, (newRes, _, onCleanup) => {
-    const countdownBeforeParty = setTimeout(() => {
+    const countdownBeforeParty = setTimeout(async () => {
         console.log(newRes);
+        await sendChatCompletion(resultSpeech.value);
     }, 2000);
 
     onCleanup(() => {

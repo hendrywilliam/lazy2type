@@ -1,12 +1,11 @@
 # lazy2type
 https://lazy2type.netlify.app/
 
-https://lazy2type.netlify.app/
-
 ## Tech Stack
 
 -   Typescript
 -   Vue 3 (Composition API)
+-   SCSS
 
 ![Lazy2Type](./public/screenshot.png)
 

@@ -6,7 +6,7 @@
                 href="https://github.com/hendrywilliam/lazy2type"
                 class="navbar__github-link"
             >
-                <img src="../../assets/img/github.svg" alt="" />
+                <img src="../../assets/img/github.svg" alt="Github" />
                 Star on Github
             </a>
         </div>

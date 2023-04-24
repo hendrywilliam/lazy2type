@@ -67,6 +67,7 @@ export class ChatCompletionChatGPT {
             signal: this._signal.signal,
             body: JSON.stringify(data),
         });
+        console.log(response);
         return response.json();
     }
 
@@ -74,3 +75,45 @@ export class ChatCompletionChatGPT {
         this._signal.abort();
     }
 }
+
+export const openaiStream = async (prompt: string) => {
+    const signal = new AbortController();
+    const req: IRequestChatCompletion = {
+        model: "gpt-3.5-turbo",
+        messages: [
+            {
+                role: "user",
+                content: prompt,
+            },
+        ],
+        max_tokens: 1000,
+        temperature: 0,
+        stream: true,
+    };
+    try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+            },
+            signal: signal.signal,
+            body: JSON.stringify(req),
+        });
+
+        const reader = res.body?.getReader();
+        const result = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+            console.log(value);
+            const ngabers = new TextDecoder().decode(value);
+            result.push(ngabers);
+        }
+        console.log(result);
+    } catch (err) {
+        console.log(err);
+    }
+};

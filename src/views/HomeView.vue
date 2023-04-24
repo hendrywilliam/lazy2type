@@ -27,6 +27,8 @@
                 >
                     Listen
                 </button>
+                <button @click="ngabers">Ngabers</button>
+                <p>{{ streaming }}</p>
             </div>
         </main>
     </DefaultLayout>
@@ -38,12 +40,24 @@ import SR from "../utils/voice";
 import words from "../utils/grammar";
 import { ref, watch } from "vue";
 import { ChatCompletionChatGPT } from "../utils/openai";
+import { openaiStream } from "../utils/openai";
+
+const streaming = ref<any>();
+async function ngabers(): Promise<void> {
+    const ngab = await openaiStream("Tuliskan hello world dalam javascript");
+    streaming.value = ngab;
+    console.log(ngab);
+}
+
+//-----here
+
 const chatCompletion = new ChatCompletionChatGPT();
 
 async function sendChatCompletion(prompt: string): Promise<void> {
     const res = await chatCompletion.sendChatPrompt(prompt);
-    resultAI.value = res.choices[0].message.content;
+    console.log(res.choices[0].message.content);
     console.log(res);
+    resultAI.value = res.choices[0].message.content;
 }
 
 const resultAI = ref<string | any>(
@@ -81,7 +95,7 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
 };
 
 //programmatically stop => voiceResultWatcher()
-const voiceResultWatcher = watch(resultSpeech, (newRes, _, onCleanup) => {
+const voiceResultWatcher = watch(resultSpeech, (_, __, onCleanup) => {
     const countdownBeforeParty = setTimeout(async () => {
         await sendChatCompletion(resultSpeech.value);
     }, 2000);

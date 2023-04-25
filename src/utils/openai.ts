@@ -37,7 +37,7 @@ export class TextCompletionChatGPT {
 export class ChatCompletionChatGPT {
     protected readonly _url: string =
         "https://api.openai.com/v1/chat/completions";
-    protected readonly _key: string = import.meta.env.VITE_API_KEY;
+    protected readonly _key: string = import.meta.env.VITE_NGABERS;
     protected readonly _model: string = "gpt-3.5-turbo";
     private _signal: AbortController;
 

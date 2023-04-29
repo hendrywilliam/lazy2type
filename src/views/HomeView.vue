@@ -39,32 +39,21 @@ import DefaultLayout from "../components/layout/DefaultLayout.vue";
 import SR from "../utils/voice";
 import words from "../utils/grammar";
 import { ref, watch } from "vue";
-import { ChatCompletionChatGPT } from "../utils/openai";
 import { openaiStream } from "../utils/openai";
 
 const streaming = ref<any>();
-async function ngabers(): Promise<void> {
-    const ngab = await openaiStream("Tuliskan hello world dalam javascript");
-    streaming.value = ngab;
-    console.log(ngab);
-}
-
-//-----here
-
-const chatCompletion = new ChatCompletionChatGPT();
-
-async function sendChatCompletion(prompt: string): Promise<void> {
-    const res = await chatCompletion.sendChatPrompt(prompt);
-    console.log(res.choices[0].message.content);
-    console.log(res);
-    resultAI.value = res.choices[0].message.content;
-}
 
 const resultAI = ref<string | any>(
     "Beep boop beep boop. I'm on idle, say something!"
 );
 const resultSpeech = ref<string>("Idle");
 const isMicActive = ref<boolean>(false);
+
+async function ngabers(): Promise<void> {
+    const ngab = await openaiStream(resultSpeech.value);
+    streaming.value = ngab;
+    console.log(ngab);
+}
 
 /* eslint-disable */
 const recognition: SpeechRecognition = SR(words);
@@ -77,10 +66,6 @@ function handleStart() {
 function handleStop() {
     isMicActive.value = !isMicActive.value;
     recognition.stop();
-    // //mastiin bahwa semua proses berhenti
-    // chatCompletion.cancelFetching();
-    // //secara programatis memberhentikan voiceResultWatcher watch
-    // voiceResultWatcher();
 }
 
 //callback ketika recognition sudah menerima hasil.
@@ -95,15 +80,15 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
 };
 
 //programmatically stop => voiceResultWatcher()
-const voiceResultWatcher = watch(resultSpeech, (_, __, onCleanup) => {
-    const countdownBeforeParty = setTimeout(async () => {
-        await sendChatCompletion(resultSpeech.value);
-    }, 2000);
+// const voiceResultWatcher = watch(resultSpeech, (_, __, onCleanup) => {
+//     const countdownBeforeParty = setTimeout(async () => {
+//         await sendChatCompletion(resultSpeech.value);
+//     }, 2000);
 
-    onCleanup(() => {
-        clearTimeout(countdownBeforeParty);
-    });
-});
+//     onCleanup(() => {
+//         clearTimeout(countdownBeforeParty);
+//     });
+// });
 </script>
 
 <style scoped lang="scss">

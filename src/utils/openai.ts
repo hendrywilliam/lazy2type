@@ -67,7 +67,6 @@ export class ChatCompletionChatGPT {
             signal: this._signal.signal,
             body: JSON.stringify(data),
         });
-        console.log(this._key);
         return response.json();
     }
 

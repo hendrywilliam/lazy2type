@@ -1,7 +1,7 @@
 <template>
     <div class="footer">
         <p class="footer__context">
-            Powered by <span>Netlify</span> & <span>OpenAI</span> - HENDRI
+            Powered by <span>Vercel</span> & <span>OpenAI</span> - HENDRI
             WILLIAM @ 2023
         </p>
     </div>
@@ -17,7 +17,7 @@
     align-items: center;
     &__context {
         :first-child {
-            color: #20c6b7;
+            color: white;
             font-weight: 600;
         }
 

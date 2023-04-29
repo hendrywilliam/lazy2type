@@ -3,9 +3,6 @@
         <main class="main">
             <div class="result-chat">
                 <div class="result-item">
-                    <div class="result-item__avatar">
-                        <img src="../assets/img/robot.svg" alt="Robot Icon" />
-                    </div>
                     <p class="result-item__content">{{ resultAI }}</p>
                 </div>
             </div>
@@ -27,8 +24,6 @@
                 >
                     Listen
                 </button>
-                <button @click="ngabers">Ngabers</button>
-                <p>{{ streaming }}</p>
             </div>
         </main>
     </DefaultLayout>
@@ -41,18 +36,15 @@ import words from "../utils/grammar";
 import { ref, watch } from "vue";
 import { openaiStream } from "../utils/openai";
 
-const streaming = ref<any>();
-
 const resultAI = ref<string | any>(
     "Beep boop beep boop. I'm on idle, say something!"
 );
 const resultSpeech = ref<string>("Idle");
 const isMicActive = ref<boolean>(false);
 
-async function ngabers(): Promise<void> {
-    const ngab = await openaiStream(resultSpeech.value);
-    streaming.value = ngab;
-    console.log(ngab);
+async function handleChatCompletion(prompt: string): Promise<void> {
+    const result = await openaiStream(prompt);
+    resultAI.value = result;
 }
 
 /* eslint-disable */
@@ -79,16 +71,16 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
     }
 };
 
-//programmatically stop => voiceResultWatcher()
-// const voiceResultWatcher = watch(resultSpeech, (_, __, onCleanup) => {
-//     const countdownBeforeParty = setTimeout(async () => {
-//         await sendChatCompletion(resultSpeech.value);
-//     }, 2000);
+// programmatically stop => voiceResultWatcher()
+const voiceResultWatcher = watch(resultSpeech, (_, __, onCleanup) => {
+    const countdownBeforeParty = setTimeout(async () => {
+        await handleChatCompletion(resultSpeech.value);
+    }, 2000);
 
-//     onCleanup(() => {
-//         clearTimeout(countdownBeforeParty);
-//     });
-// });
+    onCleanup(() => {
+        clearTimeout(countdownBeforeParty);
+    });
+});
 </script>
 
 <style scoped lang="scss">

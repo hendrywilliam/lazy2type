@@ -30,13 +30,18 @@ export const openaiStream = async (prompt: string) => {
                 if (done) {
                     break;
                 }
+                //this will generate chunk from Uint8Array to String
                 const chunk = new TextDecoder().decode(value);
+                //every chunk contains 2 lines of code, its either data & data || data & " "
                 const lines = chunk.split("\n\n");
                 const pls = lines
-                    .map((line) => line.replace(/^data: /gm, "").trim())
+                    //remove "data: " {}
+                    .map((line) => line.replace(/^data: /gm, ""))
+                    //filter line dari lines[]
                     .filter((line) => line !== "" && line !== "[DONE]")
                     .map((line) => JSON.parse(line));
 
+                //safe way to access properties which possible to be undefined
                 for (const pl in pls) {
                     const { choices } = pls[pl];
                     const { delta } = choices[0];
@@ -47,7 +52,7 @@ export const openaiStream = async (prompt: string) => {
                 }
             }
         }
-        console.log(result);
+        return result;
     } catch (err) {
         console.log(err);
     }

@@ -18,5 +18,11 @@ module.exports = {
                 ignores: ["Footer", "Navbar"],
             },
         ],
+        "no-constant-condition": [
+            "error",
+            {
+                checkLoops: false,
+            },
+        ],
     },
 };

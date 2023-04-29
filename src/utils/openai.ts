@@ -17,7 +17,7 @@ export const openaiStream = async (prompt: string) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${import.meta.env.VITE_API_KEY || process.env.VITE_API_KEY}`,
+                Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             signal: signal.signal,
             body: JSON.stringify(req),
@@ -54,6 +54,6 @@ export const openaiStream = async (prompt: string) => {
         }
         return result;
     } catch (err) {
-        console.log(err);
+        return err;
     }
 };

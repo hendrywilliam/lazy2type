@@ -3,9 +3,6 @@
         <main class="main">
             <div class="result-chat">
                 <div class="result-item">
-                    <div class="result-item__avatar">
-                        <img src="../assets/img/robot.svg" alt="Robot Icon" />
-                    </div>
                     <p class="result-item__content">{{ resultAI }}</p>
                 </div>
             </div>
@@ -37,20 +34,18 @@ import DefaultLayout from "../components/layout/DefaultLayout.vue";
 import SR from "../utils/voice";
 import words from "../utils/grammar";
 import { ref, watch } from "vue";
-import { ChatCompletionChatGPT } from "../utils/openai";
-const chatCompletion = new ChatCompletionChatGPT();
-
-async function sendChatCompletion(prompt: string): Promise<void> {
-    const res = await chatCompletion.sendChatPrompt(prompt);
-    resultAI.value = res.choices[0].message.content;
-    console.log(res);
-}
+import { openaiStream } from "../utils/openai";
 
 const resultAI = ref<string | any>(
     "Beep boop beep boop. I'm on idle, say something!"
 );
 const resultSpeech = ref<string>("Idle");
 const isMicActive = ref<boolean>(false);
+
+async function handleChatCompletion(prompt: string): Promise<void> {
+    const result = await openaiStream(prompt);
+    resultAI.value = result;
+}
 
 /* eslint-disable */
 const recognition: SpeechRecognition = SR(words);
@@ -63,10 +58,6 @@ function handleStart() {
 function handleStop() {
     isMicActive.value = !isMicActive.value;
     recognition.stop();
-    // //mastiin bahwa semua proses berhenti
-    // chatCompletion.cancelFetching();
-    // //secara programatis memberhentikan voiceResultWatcher watch
-    // voiceResultWatcher();
 }
 
 //callback ketika recognition sudah menerima hasil.
@@ -80,10 +71,10 @@ recognition.onresult = (event: SpeechRecognitionEvent) => {
     }
 };
 
-//programmatically stop => voiceResultWatcher()
-const voiceResultWatcher = watch(resultSpeech, (newRes, _, onCleanup) => {
+// programmatically stop => voiceResultWatcher()
+const voiceResultWatcher = watch(resultSpeech, (_, __, onCleanup) => {
     const countdownBeforeParty = setTimeout(async () => {
-        await sendChatCompletion(resultSpeech.value);
+        await handleChatCompletion(resultSpeech.value);
     }, 2000);
 
     onCleanup(() => {

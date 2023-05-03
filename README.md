@@ -1,5 +1,6 @@
 # lazy2type
 https://lazy2type.vercel.app/
+This project will not generate the expected result due to limited API usage.
 
 ## Tech Stack
 
